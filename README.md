@@ -38,3 +38,15 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000
 # 4. 验证
 # 浏览器访问 http://127.0.0.1:8000/ 与 http://127.0.0.1:8000/docs
 ```
+
+## 仓库地址
+
+- GitHub：https://github.com/gugujihahaha/AI-ManJv
+- Gitee：https://gitee.com/tianshigirlggj/ai-man-jv
+
+## 开发进度
+
+- [x] 实验1：开发环境搭建，最小 FastAPI 项目可启动（v0.1.0）
+- [ ] 实验2：剧情输入与 AI 分镜拆分接口
+- [ ] 实验3：AI 漫画图片生成与存储
+- [ ] 实验4：漫剧 Web 浏览页面
