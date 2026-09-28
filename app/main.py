@@ -1,31 +1,37 @@
-"""AI-ManJv AI 漫剧创作系统 - 最小可运行入口。
+"""ManJv Factory application entry point."""
 
-阶段：实验1 环境搭建最小项目，仅提供项目信息与健康检查接口。
-后续迭代将增加：剧情输入 -> AI 分镜拆分 -> 漫画图片生成 -> Web 浏览。
-"""
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+from app.api.projects import router as projects_router
+from app.config import settings
+from app.database import initialize_database
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    initialize_database()
+    yield
+
 
 app = FastAPI(
-    title="AI-ManJv AI 漫剧创作系统",
-    description="输入故事文本，AI 拆分漫画分镜并生成漫画图片，提供 Web 页面浏览漫剧作品。",
-    version="0.1.0",
+    title="漫剧工厂 ManJv Factory",
+    description="从剧情文本到分镜、画面、配音与竖屏成片的 AI 创作流水线。",
+    version="0.3.0",
+    lifespan=lifespan,
 )
+app.include_router(projects_router)
+app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 
 
-@app.get("/", summary="项目信息")
-def root():
-    """返回项目基本信息，用于验证服务已成功启动。"""
-    return {
-        "project": "AI-ManJv",
-        "name": "AI 漫剧创作系统",
-        "version": "0.1.0",
-        "status": "running",
-        "docs": "/docs",
-    }
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    return FileResponse(settings.static_dir / "index.html")
 
 
 @app.get("/health", summary="健康检查")
-def health():
-    """健康检查接口，用于环境验收（2.6 项目可启动项）。"""
-    return {"status": "ok"}
+def health() -> dict[str, str]:
+    return {"status": "ok", "version": app.version}
