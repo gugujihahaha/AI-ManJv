@@ -5,6 +5,8 @@ import re
 import urllib.error
 import urllib.request
 
+from pydantic import ValidationError
+
 from app.config import settings
 from app.schemas import StoryboardCreate
 
@@ -15,6 +17,9 @@ sequence（从1连续递增的整数）、scene_description（可拍摄的画面
 dialogue（旁白或台词，可为空）、emotion（简短情绪）、duration（1到30秒）、
 image_prompt（适合文生图的中文提示词）。必须忠于原剧情，不补写关键事实。
 至少输出3个镜头，总时长尽量接近用户目标时长。"""
+
+# 与 schemas.StoryboardBase 的 scene_description 上限保持一致
+MAX_SCENE_CHARS = 2000
 
 
 class StoryboardGenerationError(RuntimeError):
@@ -96,19 +101,40 @@ def generate_storyboards(story_text: str, art_style: str, target_duration: int) 
     raise StoryboardGenerationError(str(first_error))
 
 
+def _split_long_fragments(fragments: list[str]) -> list[str]:
+    """A paragraph written without punctuation can exceed the field limit; cut it into shot-sized parts."""
+    result: list[str] = []
+    for fragment in fragments:
+        if len(fragment) <= MAX_SCENE_CHARS:
+            result.append(fragment)
+            continue
+        result.extend(fragment[start : start + MAX_SCENE_CHARS]
+                      for start in range(0, len(fragment), MAX_SCENE_CHARS))
+    return result
+
+
 def demo_storyboards(story_text: str, art_style: str, target_duration: int) -> list[StoryboardCreate]:
     """Deterministic offline path for demos and API outage recovery."""
     fragments = [part.strip() for part in re.split(r"[。！？\n]+", story_text) if part.strip()]
     if len(fragments) < 3:
         width = max(1, len(story_text) // 3)
         fragments = [story_text[i : i + width].strip() for i in range(0, len(story_text), width) if story_text[i : i + width].strip()]
+    fragments = _split_long_fragments(fragments)
     count = max(3, min(12, len(fragments)))
     duration = max(1, min(30, round(target_duration / count, 1)))
-    return [StoryboardCreate(
-        sequence=index,
-        scene_description=fragment,
-        dialogue=fragment,
-        emotion="待确认",
-        duration=duration,
-        image_prompt=f"{art_style}，9:16竖屏构图，{fragment}",
-    ) for index, fragment in enumerate(fragments[:count], 1)]
+    items: list[StoryboardCreate] = []
+    for index, fragment in enumerate(fragments[:count], 1):
+        scene = fragment[:MAX_SCENE_CHARS]
+        try:
+            items.append(StoryboardCreate(
+                sequence=index,
+                scene_description=scene,
+                dialogue=scene,
+                emotion="待确认",
+                duration=duration,
+                image_prompt=f"{art_style}，9:16竖屏构图，{scene}"[:3000],
+            ))
+        except ValidationError as exc:
+            # 兜底：离线路径也不能把校验异常漏成 500，统一转成业务异常由接口层转 502
+            raise StoryboardGenerationError(f"离线分镜字段校验失败：{exc}") from exc
+    return items

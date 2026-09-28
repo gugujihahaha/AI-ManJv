@@ -2,8 +2,25 @@ const root=document.querySelector('#app');
 const state={projects:[],project:null,query:'',filter:'all'};
 const statusText={draft:'待生成分镜',storyboard_generating:'正在生成',storyboard_ready:'等待确认',storyboard_failed:'生成失败',storyboard_confirmed:'分镜已确认'};
 const escapeHtml=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const fieldLabels={title:'作品名称',story_text:'剧情正文',art_style:'视觉气质',voice:'叙述声音',target_duration:'目标时长',scene_description:'画面描述',dialogue:'台词或旁白',emotion:'情绪',duration:'时长',image_prompt:'画面生成提示',sequence:'分镜序号',storyboards:'分镜列表'};
+const errorHints={missing:'不能为空',string_type:'必须是文本',string_too_short:'数量不足',string_too_long:'数量超出上限',too_short:'数量不足',too_long:'数量超出上限',greater_than_equal:'小于允许的下限',less_than_equal:'超过允许的上限',int_parsing:'必须是整数',float_parsing:'必须是数字',literal_error:'取值不在允许范围内'};
+const errorBounds={string_too_short:'min_length',string_too_long:'max_length',too_short:'min_length',too_long:'max_length',greater_than_equal:'ge',less_than_equal:'le'};
+function readError(status,detail){
+  if(typeof detail==='string'&&detail)return detail;
+  if(!Array.isArray(detail))return `请求失败（${status}）`;
+  const lines=detail.map(item=>{
+    const name=(item.loc||[]).filter(part=>part!=='body').map(part=>fieldLabels[part]||part).join(' · ')||'请求内容';
+    const raised=item.type==='value_error'&&item.msg?String(item.msg).replace(/^Value error,\s*/,''):'';
+    const bound=errorBounds[item.type];
+    let why=raised||errorHints[item.type]||'格式不正确';
+    if(!raised&&bound&&item.ctx&&item.ctx[bound]!==undefined)why+=`（${item.ctx[bound]}）`;
+    if(raised&&raised.includes(name))return raised;
+    return `${name}：${why}`;
+  });
+  return lines.length?lines.join('；'):`请求失败（${status}）`;
+}
 function toast(message,error=false){const el=document.querySelector('#toast');el.textContent=message;el.className=`toast show${error?' error':''}`;setTimeout(()=>el.className='toast',3000)}
-async function api(path,options={}){const response=await fetch(path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});if(!response.ok){let message=`请求失败（${response.status}）`;try{const data=await response.json();message=typeof data.detail==='string'?data.detail:JSON.stringify(data.detail)}catch{}throw new Error(message)}return response.status===204?null:response.json()}
+async function api(path,options={}){const response=await fetch(path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});if(!response.ok){let message=`请求失败（${response.status}）`;try{const data=await response.json();message=readError(response.status,data.detail)}catch{}throw new Error(message)}return response.status===204?null:response.json()}
 function dateText(value){return new Date(value).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}
 function renderList(){
   const total=state.projects.length;

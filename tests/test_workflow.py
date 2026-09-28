@@ -1,3 +1,4 @@
+import sqlite3
 import unittest
 from pathlib import Path
 
@@ -6,7 +7,7 @@ from pydantic import ValidationError
 from app import repository
 from app.config import settings
 from app.database import initialize_database
-from app.schemas import ProjectCreate, StoryboardUpdate
+from app.schemas import ProjectCreate, StoryboardCreate, StoryboardUpdate
 from app.services.storyboard import StoryboardGenerationError, _extract_json, _validate, demo_storyboards
 
 
@@ -47,6 +48,24 @@ class WorkflowTests(unittest.TestCase):
         self.assertTrue(repository.delete_project(project["id"]))
         self.assertIsNone(repository.get_project(project["id"]))
 
+    def test_empty_database_and_unknown_project(self):
+        self.assertEqual(repository.list_projects(), [])
+        self.assertIsNone(repository.get_project("不存在的作品编号"))
+
+    def test_blank_title_is_rejected(self):
+        with self.assertRaises(ValidationError):
+            ProjectCreate(title="   ", story_text=STORY)
+
+    def test_duplicate_sequence_is_rejected_by_unique_constraint(self):
+        project = repository.create_project(ProjectCreate(title="序号冲突", story_text=STORY))
+        rows = [
+            StoryboardCreate(sequence=1, scene_description="镜头一", dialogue="", emotion="平静", duration=3, image_prompt="画面一"),
+            StoryboardCreate(sequence=1, scene_description="镜头二", dialogue="", emotion="平静", duration=3, image_prompt="画面二"),
+            StoryboardCreate(sequence=2, scene_description="镜头三", dialogue="", emotion="平静", duration=3, image_prompt="画面三"),
+        ]
+        with self.assertRaises(sqlite3.IntegrityError):
+            repository.replace_storyboards(project["id"], rows)
+
 
 class StoryboardParsingTests(unittest.TestCase):
     def test_extracts_wrapped_json(self):
@@ -61,6 +80,13 @@ class StoryboardParsingTests(unittest.TestCase):
         ]
         with self.assertRaises(StoryboardGenerationError):
             _validate(rows)
+
+    def test_demo_handles_unpunctuated_long_paragraph(self):
+        long_story = "甲" * 2900 + "。" + "乙" * 20 + "。" + "丙" * 20
+        items = demo_storyboards(long_story, "日系赛璐璐", 120)
+        self.assertGreaterEqual(len(items), 3)
+        self.assertEqual([item.sequence for item in items], list(range(1, len(items) + 1)))
+        self.assertTrue(all(len(item.scene_description) <= 2000 for item in items))
 
 
 if __name__ == "__main__":

@@ -44,6 +44,15 @@ class ProjectCreate(BaseModel):
     voice: str = Field(default="青年男声", min_length=1, max_length=80)
     target_duration: int = Field(default=120, ge=15, le=600)
 
+    @field_validator("title")
+    @classmethod
+    def title_must_not_be_blank(cls, value: str) -> str:
+        """min_length counts spaces, so an all-blank title would otherwise be stored as ''."""
+        value = value.strip()
+        if not value:
+            raise ValueError("作品名称不能为空")
+        return value
+
     @field_validator("story_text")
     @classmethod
     def story_must_not_be_blank(cls, value: str) -> str:
