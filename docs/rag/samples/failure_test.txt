@@ -1,0 +1,7 @@
+RAG 模型调用失败测试
+运行时间：2026-10-17 19:16:16
+
+空密钥（未配置接口） -> RagError：未配置 DEEPSEEK_API_KEY，无法调用模型（0 ms）
+错误密钥（接口返回 401） -> RagError：接口返回错误（401）{"error":{"message":"Authentication Fails, Your api key: ****-key is invalid (request_id: 9ee6c006-5193-4241-8ded-fafa0a13a4f2)","type":"authentication_error","param":null,"code":"invalid_request_erro（127 ms）
+连接失败（本机空端口） -> RagError：连接失败或超时：<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>（2050 ms）
+请求超时（不可达测试网段） -> RagError：连接失败或超时：timed out（3009 ms）

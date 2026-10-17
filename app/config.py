@@ -18,6 +18,10 @@ class Settings:
     deepseek_api_key: str = os.getenv("DEEPSEEK_API_KEY", "")
     deepseek_base_url: str = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
     deepseek_model: str = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+    knowledge_dir: Path = Path(os.getenv("KNOWLEDGE_DIR", BASE_DIR / "docs" / "rag" / "kb"))
+    knowledge_chunks_path: Path = Path(
+        os.getenv("KNOWLEDGE_CHUNKS_PATH", BASE_DIR / "docs" / "rag" / "knowledge_chunks.json")
+    )
 
 
 settings = Settings()

@@ -1,0 +1,55 @@
+{
+  "question": "分镜至少要几个才能确认？",
+  "threshold": 2.0,
+  "k": 3,
+  "top": [
+    {
+      "rank": 1,
+      "score": 6,
+      "source": "02-功能与规则.md",
+      "title": "确认与锁定",
+      "id": "02-功能与规则-05-01",
+      "pass": true
+    },
+    {
+      "rank": 2,
+      "score": 6,
+      "source": "04-常见问题.md",
+      "title": "为什么确认按钮不可用",
+      "id": "04-常见问题-02-01",
+      "pass": true
+    },
+    {
+      "rank": 3,
+      "score": 3,
+      "source": "02-功能与规则.md",
+      "title": "两种分镜生成模式",
+      "id": "02-功能与规则-02-01",
+      "pass": true
+    },
+    {
+      "rank": 4,
+      "score": 3,
+      "source": "02-功能与规则.md",
+      "title": "演示模式的分镜内容",
+      "id": "02-功能与规则-08-01",
+      "pass": true
+    },
+    {
+      "rank": 5,
+      "score": 3,
+      "source": "04-常见问题.md",
+      "title": "确认后还能改分镜吗",
+      "id": "04-常见问题-03-01",
+      "pass": true
+    },
+    {
+      "rank": 6,
+      "score": 2,
+      "source": "01-快速开始.md",
+      "title": "软件是什么",
+      "id": "01-快速开始-01-01",
+      "pass": true
+    }
+  ]
+}
