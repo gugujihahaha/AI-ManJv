@@ -22,6 +22,8 @@ class Settings:
     knowledge_chunks_path: Path = Path(
         os.getenv("KNOWLEDGE_CHUNKS_PATH", BASE_DIR / "docs" / "rag" / "knowledge_chunks.json")
     )
+    agent_runs_dir: Path = Path(os.getenv("AGENT_RUNS_DIR", BASE_DIR / "docs" / "agent" / "runs"))
+    agent_log_path: Path = Path(os.getenv("AGENT_LOG_PATH", BASE_DIR / "storage" / "agent.log"))
 
 
 settings = Settings()

@@ -24,5 +24,7 @@ Thumbs.db
 generated/
 *.db
 *.sqlite3
+docs/agent/runs/
+tests/_agent_runs/
 
 *.log

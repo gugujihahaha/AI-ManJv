@@ -1,0 +1,181 @@
+{
+  "project_id": "fe3cdb26-66d8-4f4c-adca-a64a70a5eff7",
+  "project_title": "雨夜来信",
+  "generated_at": "2026-11-08 13:48:36",
+  "cases": [
+    {
+      "case": "参数错误后纠正",
+      "run_id": "20261108-134836-2de2",
+      "status": "success",
+      "error": "",
+      "steps": 4,
+      "tool_calls": 3,
+      "elapsed_ms": 2,
+      "success_check": {
+        "ok": true,
+        "problems": [],
+        "parsed": {
+          "project_title": "雨夜来信",
+          "shot_count": 12,
+          "total_duration": 120.0,
+          "average_duration": 10.0,
+          "issues": [
+            "12 个镜头的时长全部为 10.0 秒，节奏没有变化",
+            "有 12 个镜头的情绪仍为“待确认”"
+          ],
+          "conclusion": "节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。"
+        }
+      },
+      "final_answer": "{\"project_title\": \"雨夜来信\", \"shot_count\": 12, \"total_duration\": 120.0, \"average_duration\": 10.0, \"issues\": [\"12 个镜头的时长全部为 10.0 秒，节奏没有变化\", \"有 12 个镜头的情绪仍为“待确认”\"], \"conclusion\": \"节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。\"}",
+      "log_path": "D:\\RuanJianYongYongKaiFaShiJian\\AI-ManJv\\docs\\agent\\runs\\20261108-134836-2de2.json",
+      "tool_records": [
+        {
+          "name": "get_project_detail",
+          "status": "error",
+          "error_type": "VALIDATION_ERROR",
+          "message": "字段 project_id 应为字符串，实际为 int",
+          "confirmation": null
+        },
+        {
+          "name": "get_project_detail",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        },
+        {
+          "name": "compute_storyboard_stats",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        }
+      ]
+    },
+    {
+      "case": "工具异常后继续",
+      "run_id": "20261108-134836-266b",
+      "status": "success",
+      "error": "",
+      "steps": 3,
+      "tool_calls": 2,
+      "elapsed_ms": 1,
+      "success_check": {
+        "ok": true,
+        "problems": [],
+        "parsed": {
+          "project_title": "雨夜来信",
+          "shot_count": 12,
+          "total_duration": 120.0,
+          "average_duration": 10.0,
+          "issues": [
+            "12 个镜头的时长全部为 10.0 秒，节奏没有变化",
+            "有 12 个镜头的情绪仍为“待确认”"
+          ],
+          "conclusion": "节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。"
+        }
+      },
+      "final_answer": "{\"project_title\": \"雨夜来信\", \"shot_count\": 12, \"total_duration\": 120.0, \"average_duration\": 10.0, \"issues\": [\"12 个镜头的时长全部为 10.0 秒，节奏没有变化\", \"有 12 个镜头的情绪仍为“待确认”\"], \"conclusion\": \"节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。\"}",
+      "log_path": "D:\\RuanJianYongYongKaiFaShiJian\\AI-ManJv\\docs\\agent\\runs\\20261108-134836-266b.json",
+      "tool_records": [
+        {
+          "name": "__test_boom",
+          "status": "error",
+          "error_type": "TOOL_EXCEPTION",
+          "message": "RuntimeError: 模拟工具异常：数据库连接被重置",
+          "confirmation": null
+        },
+        {
+          "name": "compute_storyboard_stats",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        }
+      ]
+    },
+    {
+      "case": "工具超时后继续",
+      "run_id": "20261108-134836-f127",
+      "status": "success",
+      "error": "",
+      "steps": 3,
+      "tool_calls": 2,
+      "elapsed_ms": 213,
+      "success_check": {
+        "ok": true,
+        "problems": [],
+        "parsed": {
+          "project_title": "雨夜来信",
+          "shot_count": 12,
+          "total_duration": 120.0,
+          "average_duration": 10.0,
+          "issues": [
+            "12 个镜头的时长全部为 10.0 秒，节奏没有变化",
+            "有 12 个镜头的情绪仍为“待确认”"
+          ],
+          "conclusion": "节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。"
+        }
+      },
+      "final_answer": "{\"project_title\": \"雨夜来信\", \"shot_count\": 12, \"total_duration\": 120.0, \"average_duration\": 10.0, \"issues\": [\"12 个镜头的时长全部为 10.0 秒，节奏没有变化\", \"有 12 个镜头的情绪仍为“待确认”\"], \"conclusion\": \"节奏结论：镜头数量与总时长匹配目标，但时长分布均匀，建议增加长短镜头对比。\"}",
+      "log_path": "D:\\RuanJianYongYongKaiFaShiJian\\AI-ManJv\\docs\\agent\\runs\\20261108-134836-f127.json",
+      "tool_records": [
+        {
+          "name": "__test_slow",
+          "status": "timeout",
+          "error_type": "TOOL_TIMEOUT",
+          "message": "工具 __test_slow 超过等待时间仍未返回；本次已停止等待，后台线程可能仍在运行",
+          "confirmation": null
+        },
+        {
+          "name": "compute_storyboard_stats",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        }
+      ]
+    },
+    {
+      "case": "达到最大步数",
+      "run_id": "20261108-134836-18fb",
+      "status": "stopped",
+      "error": "MAX_STEPS",
+      "steps": 2,
+      "tool_calls": 2,
+      "elapsed_ms": 1,
+      "success_check": null,
+      "final_answer": "",
+      "log_path": "D:\\RuanJianYongYongKaiFaShiJian\\AI-ManJv\\docs\\agent\\runs\\20261108-134836-18fb.json",
+      "tool_records": [
+        {
+          "name": "list_projects",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        },
+        {
+          "name": "list_projects",
+          "status": "ok",
+          "error_type": "",
+          "message": "",
+          "confirmation": null
+        }
+      ]
+    },
+    {
+      "case": "总时限停止",
+      "run_id": "20261108-134836-af6c",
+      "status": "stopped",
+      "error": "TOTAL_TIMEOUT",
+      "steps": 1,
+      "tool_calls": 0,
+      "elapsed_ms": 200,
+      "success_check": null,
+      "final_answer": "",
+      "log_path": "D:\\RuanJianYongYongKaiFaShiJian\\AI-ManJv\\docs\\agent\\runs\\20261108-134836-af6c.json",
+      "tool_records": []
+    }
+  ]
+}

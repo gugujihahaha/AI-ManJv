@@ -37,6 +37,17 @@ CREATE TABLE IF NOT EXISTS storyboards (
 );
 CREATE INDEX IF NOT EXISTS idx_storyboards_project_sequence
 ON storyboards(project_id, sequence);
+CREATE TABLE IF NOT EXISTS analysis_notes (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    run_id TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(project_id, run_id)
+);
+CREATE INDEX IF NOT EXISTS idx_analysis_notes_project
+ON analysis_notes(project_id, updated_at);
 """
 
 
